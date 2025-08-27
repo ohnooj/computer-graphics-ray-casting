@@ -1,8 +1,8 @@
 # Computer Graphics – Ray Casting
 
-> **To get started:** Clone this repository and its submodule using 
-> 
->     git clone --recursive http://github.com/alecjacobson/computer-graphics-ray-casting.git
+> **To get started:** Clone this repository and its submodule using
+>
+>     git clone --recursive git@github.com:ohnooj/computer-graphics-ray-casting.git
 >
 > **Do not fork:** Clicking "Fork" will create a _public_ repository. If you'd like to use GitHub while you work on your assignment, then mirror this repo as a new _private_ repository: https://stackoverflow.com/questions/10065526/github-how-to-make-a-fork-of-public-repository-private
 
@@ -97,7 +97,7 @@ A simple, yet effective and popular way to approximate a complex shape is to
 store list of (many and small) triangles covering the shape's surface. If we
 place no assumptions on these triangles (i.e., they don't have to be connected
 together or non-intersecting), then we call this collection a "[triangle
-soup](https://en.wikipedia.org/wiki/Polygon_soup)". 
+soup](https://en.wikipedia.org/wiki/Polygon_soup)".
 
 When considering the intersection of a ray and a triangle soup, we simply need
 to find the _first_ triangle in the soup that the ray intersects first.
@@ -208,7 +208,7 @@ Intersect a triangle soup with a ray.
 
 > **Pro Tip:** After you're confident that your program is working _correctly_,
 > you can dramatic improve the performance simply by enabling [compiler
-> optimization](https://en.wikipedia.org/wiki/Optimizing_compiler): 
+> optimization](https://en.wikipedia.org/wiki/Optimizing_compiler):
 >
 > ```
 > mkdir build-release

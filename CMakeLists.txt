@@ -1,34 +1,40 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.20)
 project(raycasting)
 
-# Prepare the build environment
-set(ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
-option(USE_SOLUTION "Use solution"  OFF)
-# Add your project files
-include_directories("include/")
-if(USE_SOLUTION)
-  set(SRC_DIR "solution/")
+# C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Toggle solution vs. src
+option(USE_SOLUTION "Build the reference solution" OFF)
+set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+if (USE_SOLUTION)
+  set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/solution")
+endif()
+
+# Sources (use CONFIGURE_DEPENDS so CMake reconfigures when files change)
+file(GLOB SRCFILES CONFIGURE_DEPENDS "${SRC_DIR}/*.cpp")
+
+# Create target executable
+add_executable(${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp" ${SRCFILES})
+
+# Include paths
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
+
+# Eigen under ./eigen/
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/eigen")
+  target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/eigen")
 else()
-  set(SRC_DIR "src/")
+  message(WARNING "Eigen not found. Install Eigen3 or provide a ./eigen directory.  You may need to call git submodule update --init --recursive.")
 endif()
-file(GLOB SRCFILES "${SRC_DIR}/*.cpp")
-list(APPEND SRCFILES main.cpp)
-# create executable
-include(CheckCXXCompilerFlag)
 
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+# Warnings
+if (MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /permissive-)
 else()
-    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 endif()
-
-if(HW2LIB_DIR)
-  link_directories(${HW2LIB_DIR})
-endif()
-
-add_executable(${PROJECT_NAME} ${SRCFILES})
-target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${ROOT}/eigen)
