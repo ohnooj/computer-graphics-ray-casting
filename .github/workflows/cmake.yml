@@ -90,3 +90,16 @@ jobs:
             build/**/*.exe
             build/**/raycasting
 
+      - name: Run binary (smoke)
+        shell: bash
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            # Visual Studio generator places exe under build/<Config>/
+            exe="build/${{ matrix.build_type }}/raycasting.exe"
+            "$exe"
+          else
+            # Unix Makefiles: exe at build/<targetname>
+            ./build/raycasting
+          fi
+
+
