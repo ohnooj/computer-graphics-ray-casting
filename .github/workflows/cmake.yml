@@ -53,6 +53,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive   # pull submodules too
+          fetch-depth: 0   
 
       - name: Install packages (Ubuntu)
         if: startsWith(matrix.os, 'ubuntu')
